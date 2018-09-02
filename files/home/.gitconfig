@@ -1,0 +1,5 @@
+[core]
+	autocrlf = false
+	pager = less -S
+[alias]
+	lg1 = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit

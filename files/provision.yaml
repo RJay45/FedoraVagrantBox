@@ -1,0 +1,44 @@
+---
+- hosts: all
+  tasks:
+  - name: Update required packages
+    dnf:
+      name: "*"
+      state: latest
+      
+  - name: Install required packaged
+    dnf:
+      name:
+        - "htop"
+        - "tmux"
+        - "powerline"
+        - "vim-enhanced"
+        - "python3"
+        - "git"
+        - "@C Development Tools and Libraries"
+        - "binutils"
+        - "nasm"
+        - "cmake"
+        - "@kde-desktop"
+        - "wireshark"
+        - "xclip"
+        - "kompare"
+        - "krusader"
+        - "gdm"
+      state: latest
+      
+  - name: Set graphical target
+    command: systemctl set-default graphical.target
+      
+  - name: Start display manager
+    systemd:
+      name: gdm
+      state: started
+      enabled: yes
+      
+  - name: Copy customisations
+    copy:
+      src: /vagrant/files/home/
+      dest: /home/vagrant/
+      owner: vagrant
+      group: vagrant
