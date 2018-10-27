@@ -32,6 +32,7 @@
         - "gdm"
         - "libselinux-python"
         - "libselinux-python3"
+        - "firefox"
       state: latest
       
   - name: Set graphical target
