@@ -1,6 +1,6 @@
 # Fedora 28 Vagrant Box
 
-This is a vagrant machine that I through together to load up a Fedora 28 box using the Fedora 28 Cloud Base image. 
+This is a vagrant machine that I threw together to load up a Fedora 28 box using the Fedora 28 Cloud Base image.
 It will update the box and install a set of tools for development. The machine will be configured to load a GUI.
 Both Gnome and KDE are installed.
 

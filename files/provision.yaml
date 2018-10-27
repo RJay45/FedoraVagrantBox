@@ -1,5 +1,8 @@
 ---
 - hosts: all
+  vars:
+    pycharm_dir: "/opt/pycharm-community-2018.2.4"
+    pycharm_dest: "{{ pycharm_dir }}.tar.gz"
   tasks:
   - name: Update required packages
     dnf:
@@ -9,6 +12,8 @@
   - name: Install required packaged
     dnf:
       name:
+        - "ntp"
+        - "VirtualBox-guest-additions"
         - "htop"
         - "tmux"
         - "powerline"
@@ -25,20 +30,49 @@
         - "kompare"
         - "krusader"
         - "gdm"
+        - "libselinux-python"
+        - "libselinux-python3"
       state: latest
       
   - name: Set graphical target
     command: systemctl set-default graphical.target
-      
-  - name: Start display manager
+
+  - name: Start display manager and ntp
     systemd:
-      name: gdm
+      name: "{{ item }}"
       state: started
       enabled: yes
-      
+    with_items:
+      - gdm
+      - ntpd
+
   - name: Copy customisations
     copy:
       src: /vagrant/files/home/
       dest: /home/vagrant/
       owner: vagrant
       group: vagrant
+
+  - name: Check state of PyCharm install
+    stat:
+      path: "{{ pycharm_dir }}"
+      get_checksum: no
+    register: install_dir
+
+  - block:
+    - name: Download PyCharm Community
+      get_url:
+        url: "https://download.jetbrains.com/python/pycharm-community-2018.2.4.tar.gz"
+        dest: "{{ pycharm_dest }}"
+
+    - name: Extract PyCharm
+      unarchive:
+        remote_src: yes
+        src: "{{ pycharm_dest }}"
+        dest: /opt/
+
+    - name: Remove Pycharm tar
+      file:
+        path: "{{ pycharm_dest }}"
+        state: absent
+    when: not install_dir.stat.isdir
